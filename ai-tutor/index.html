@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Tutor Module</title>
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/layout.css" />
+    <link rel="stylesheet" href="./css/components.css" />
+    <link rel="stylesheet" href="./css/themes.css" />
+  </head>
+  <body>
+    <div id="app" class="app-shell">
+      <header class="app-header">
+        <div class="header-title">
+          <h1>AI Tutor</h1>
+          <p>Interactive learning with guided lessons, quizzes, and personalized study plans.</p>
+        </div>
+        <div id="header-meta" class="header-meta"></div>
+      </header>
+
+      <main class="main-grid">
+        <section class="left-column">
+          <article class="panel panel-selector">
+            <h2>Subject & Topic Explorer</h2>
+            <div id="topic-selector"></div>
+          </article>
+
+          <article class="panel panel-lesson-cards">
+            <div class="panel-title-row">
+              <h2>Lessons</h2>
+              <button id="refresh-lessons-btn" class="btn btn-secondary" type="button">Refresh</button>
+            </div>
+            <div id="lesson-cards"></div>
+          </article>
+
+          <article class="panel panel-study-plan">
+            <div class="panel-title-row">
+              <h2>Study Plan</h2>
+              <button id="clear-study-plan-btn" class="btn btn-secondary" type="button">Clear Completed</button>
+            </div>
+            <div id="study-plan"></div>
+          </article>
+        </section>
+
+        <section class="center-column">
+          <article class="panel panel-lesson-viewer">
+            <h2>Lesson Content</h2>
+            <div id="lesson-viewer"></div>
+          </article>
+
+          <article class="panel panel-quiz">
+            <div class="panel-title-row">
+              <h2>Quiz Lab</h2>
+              <button id="new-quiz-btn" class="btn btn-primary" type="button">Generate Quiz</button>
+            </div>
+            <div id="quiz-panel"></div>
+          </article>
+        </section>
+
+        <section class="right-column">
+          <article class="panel panel-chat">
+            <h2>Ask the Tutor</h2>
+            <div id="chat-panel"></div>
+          </article>
+
+          <article class="panel panel-progress">
+            <h2>Progress Dashboard</h2>
+            <div id="progress-dashboard"></div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>

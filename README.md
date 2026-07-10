@@ -13,6 +13,7 @@
 - 🌍 **Language Detection** — Auto-detect programming languages from code input
 - 📜 **Compilation History** — Review past compilations and AI interactions
 - 💡 **AI Tutor Panel** — Interactive AI tutor for guided learning
+- 🧠 **AI Tutor Web Module** — Standalone plain JS tutor app in `ai-tutor/`
 
 ---
 
@@ -67,6 +68,12 @@ vibe-coders/
 ├── compilationHistory.js   # Compilation history tracker
 ├── languageDetector.js     # Language detection engine
 └── useAuth.js              # Authentication hook
+```
+
+Additional standalone module:
+
+```
+vibe-coders/ai-tutor/       # Plain JS/CSS/HTML AI tutor experience
 ```
 
 ---
