@@ -1,0 +1,193 @@
+/* ================================================================
+   IssueCard — matches reference image exactly.
+   Layout per issue:
+     1. Peach/orange gradient banner ("AI Analysis" + hint subtitle)
+     2. White card  → Analysis Summary  (blue book icon)
+     3. Rose  card  → Root Cause        (red bug icon)
+     4. Sky   card  → How to Fix        (blue lightning icon)
+   Each of the 3 cards is independently collapsible.
+   ================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ── Issue group wrapper ───────────────────────────────────── */
+.issueGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BANNER — warm peach gradient, matches reference top bar
+   ═══════════════════════════════════════════════════════════ */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid;
+  /* background and borderColor set inline by config */
+}
+
+.bannerIconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.bannerIconBox svg {
+  width: 20px;
+  height: 20px;
+}
+
+.bannerText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bannerTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1c1917;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.bannerSub {
+  font-size: 12px;
+  color: #78716c;
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION CARDS
+   ═══════════════════════════════════════════════════════════ */
+
+/* Base card shell */
+.sectionCard {
+  border-radius: 12px;
+  border: 1px solid;
+  overflow: hidden;
+}
+
+/* White card — Analysis Summary */
+.cardWhite {
+  background: #ffffff;
+  border-color: #e5e7eb;
+}
+
+/* Rose card — Root Cause */
+.cardRose {
+  background: linear-gradient(160deg, #fff5f5 0%, #fff1f2 100%);
+  border-color: #fecaca;
+}
+
+/* Sky card — How to Fix */
+.cardSky {
+  background: linear-gradient(160deg, #f0f7ff 0%, #eff6ff 100%);
+  border-color: #bfdbfe;
+}
+
+/* ── Section row (clickable header) ── */
+.sectionRow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+
+.sectionRow:hover {
+  filter: brightness(0.98);
+}
+
+/* Icon box inside section */
+.sectionIconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 9px;
+  flex-shrink: 0;
+}
+
+.sectionIconBox svg {
+  width: 17px;
+  height: 17px;
+}
+
+.sectionTitle {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.01em;
+}
+
+.chevronIcon {
+  width: 18px;
+  height: 18px;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+/* ── Section content area ── */
+.sectionContent {
+  padding: 2px 16px 16px 62px;
+  /* 62px = 16 pad + 34 icon + 12 gap */
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Plain text inside sections */
+.sectionText {
+  font-size: 13.5px;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* "Line 5" large text in Root Cause */
+.lineText {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* Fix code block */
+.fixCode {
+  background: #0f172a;
+  color: #a6e3a1;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 11px 14px;
+  border-radius: 8px;
+  overflow-x: auto;
+  white-space: pre;
+  margin: 0;
+  border: 1px solid #1e293b;
+}
+
+.fixCode code { font-family: inherit; }

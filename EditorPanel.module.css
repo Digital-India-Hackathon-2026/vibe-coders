@@ -1,0 +1,559 @@
+/* ============================================================
+   EditorPanel — dark navy theme, syntax-highlighted overlay
+   ============================================================ */
+
+/* ─── Font stack (JetBrains Mono preferred) ──────────────── */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ─── Panel shell ────────────────────────────────────────── */
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;          /* allow flex shrink — keeps run bar visible */
+  background: #0d1117;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+  overflow: hidden;
+}
+
+/* ─── Tab bar ────────────────────────────────────────────── */
+.tabBar {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  height: 42px;
+  background: #010409;
+  border-bottom: 1px solid #21262d;
+  flex-shrink: 0;
+  padding: 0 8px 0 0;
+  overflow: hidden;
+}
+
+/* Scrollable list of file tabs + the "+" button */
+.tabList {
+  display: flex;
+  align-items: flex-end;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;           /* Firefox */
+}
+.tabList::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+/* ── Base tab (shared) ────────────────────────────────────── */
+.fileTab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  height: 38px;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  user-select: none;
+  flex-shrink: 0;
+  max-width: 200px;
+  min-width: 80px;
+  transition: background 0.13s;
+  position: relative;
+  border: 1px solid transparent;
+  border-bottom: none;
+}
+
+/* ── Active tab ───────────────────────────────────────────── */
+.fileTabActive {
+  background: #0d1117;
+  border-color: #21262d;
+  /* bottom gap hides tab-bar bottom border so tab "lifts" */
+  box-shadow: 0 2px 0 #0d1117;
+  cursor: default;
+}
+
+/* ── Inactive tab ─────────────────────────────────────────── */
+.fileTabInactive {
+  background: transparent;
+  color: #484f58;
+}
+.fileTabInactive:hover {
+  background: #0d111799;
+}
+
+/* ── Dot indicator ────────────────────────────────────────── */
+.fileDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #58a6ff;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px #58a6ff88;
+  transition: background 0.13s, box-shadow 0.13s;
+}
+.fileDotInactive {
+  background: #3d444d;
+  box-shadow: none;
+}
+
+/* ── File name ────────────────────────────────────────────── */
+.fileName {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #c9d1d9;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+.fileTabInactive .fileName {
+  color: #6e7681;
+}
+
+/* ── × Close button ───────────────────────────────────────── */
+.tabClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: #6e7681;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.12s, color 0.12s, opacity 0.12s;
+  opacity: 1;          /* always visible */
+}
+.fileTabInactive .tabClose {
+  opacity: 0.5;        /* slightly dimmer on inactive tabs */
+}
+.fileTabInactive:hover .tabClose {
+  opacity: 1;
+}
+.tabClose:hover {
+  background: #da363344;
+  color: #f85149;
+}
+
+/* ── + Add-tab button ─────────────────────────────────────── */
+.tabAdd {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #30363d;   /* always-visible border */
+  border-radius: 6px;
+  background: #161b22;          /* subtle fill so it stands out */
+  color: #8b949e;               /* bright enough to see clearly */
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  align-self: center;
+  margin-left: 6px;
+  transition: background 0.12s, color 0.12s, border-color 0.12s, box-shadow 0.12s;
+}
+.tabAdd:hover {
+  background: #238636;
+  border-color: #3fb950;
+  color: #ffffff;
+  box-shadow: 0 0 8px #23863666;
+}
+
+/* ── + button dropdown menu ──────────────────────────────── */
+.addMenu {
+  z-index: 1000;
+  min-width: 180px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(48, 54, 61, 0.5);
+  animation: addMenuIn 0.15s ease-out;
+}
+
+@keyframes addMenuIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+.addMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: #c9d1d9;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.addMenuItem:hover {
+  background: #21262d;
+  color: #f0f6fc;
+}
+
+.addMenuItem:active {
+  background: #30363d;
+}
+
+.addMenuItem svg {
+  flex-shrink: 0;
+  color: #8b949e;
+  transition: color 0.12s;
+}
+
+.addMenuItem:hover svg {
+  color: #58a6ff;
+}
+
+/* ── Inline rename input ──────────────────────────────────── */
+.tabRenameInput {
+  background: #161b22;
+  border: 1px solid #58a6ff;
+  border-radius: 4px;
+  color: #c9d1d9;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 6px;
+  outline: none;
+  min-width: 60px;
+  max-width: 140px;
+  width: 100%;
+  box-shadow: 0 0 0 2px #58a6ff33;
+}
+
+.tabRight {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+
+.langDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3fb950;
+  box-shadow: 0 0 6px #3fb95088;
+}
+
+.tabMeta {
+  font-size: 11.5px;
+  color: #484f58;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+
+/* ─── Editor body (gutter + code) ───────────────────────── */
+.editorBody {
+  display: flex;
+  flex: 1;
+  min-height: 0;          /* critical: lets editor body shrink */
+  overflow: hidden;
+  background: #0d1117;
+}
+
+/* ─── Line-number gutter ─────────────────────────────────── */
+.gutter {
+  width: 52px;
+  flex-shrink: 0;
+  overflow: hidden;            /* vertically synced via JS */
+  padding-top: 16px;
+  padding-bottom: 16px;
+  background: #0d1117;
+  border-right: 1px solid #161b22;
+  user-select: none;
+}
+
+/* Single pre element for line numbers — MUST mirror .highlight/.textarea
+   font properties exactly so both text blocks share identical per-line
+   pixel heights and scroll in perfect sync. */
+.lineNumbers {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+  font-size: 13.5px;
+  line-height: 1.65;
+  white-space: pre;
+  color: #3d444d;
+  text-align: right;
+  padding-right: 14px;
+  font-variant-ligatures: none; /* disable ligatures so == stays as == */
+}
+
+/* ─── Code wrapper (overlay container) ───────────────────── */
+.codeWrapper {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ─── Shared font properties for BOTH layers ─────────────── */
+.highlight,
+.textarea {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 16px 20px;
+
+  /* MUST be identical on both */
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+  font-size: 13.5px;
+  line-height: 1.65;
+  tab-size: 4;
+  -moz-tab-size: 4;
+  white-space: pre;
+  word-break: normal;
+  overflow-wrap: normal;
+  font-variant-ligatures: none; /* disable ligatures so == stays as == */
+}
+
+/* ─── Highlight layer (pre) ─────────────────────────────── */
+.highlight {
+  color: #adbac7;           /* default token colour */
+  background: transparent;
+  border: none;
+  overflow: hidden;         /* scroll is driven by textarea via JS */
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Textarea (input layer) ─────────────────────────────── */
+.textarea {
+  background: transparent;
+  color: transparent;       /* hide raw text — only the pre shows */
+  caret-color: #c9d1d9;    /* visible cursor */
+  border: none;
+  outline: none;
+  resize: none;
+  overflow: auto;           /* textarea drives scrolling */
+  z-index: 1;
+}
+
+/* Thin scrollbar styled to match the theme */
+.textarea::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.textarea::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+.textarea::-webkit-scrollbar-thumb {
+  background: #2d333b;
+  border-radius: 4px;
+}
+.textarea::-webkit-scrollbar-thumb:hover {
+  background: #444c56;
+}
+
+
+/* ─── Run bar ────────────────────────────────────────────── */
+.runBar {
+  display: flex;
+  height: 52px;
+  flex-shrink: 0;
+  background: #010409;
+  border-top: 1px solid #21262d;
+}
+
+
+/* ─── Download button ────────────────────────────────────── */
+.downloadBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background: #0d1117;
+  color: #58a6ff;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  border: none;
+  border-right: 1px solid #21262d;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.downloadBtn:hover {
+  background: #1f3a5f;
+  color: #79c0ff;
+  box-shadow: inset 0 0 0 1px #388bfd44;
+}
+
+.downloadBtn:active {
+  background: #162a45;
+}
+
+.downloadBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.clearBtn {
+  flex: 1;
+  background: #161b22;
+  color: #8b949e;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  border: none;
+  border-right: 1px solid #21262d;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+
+.clearBtn:hover {
+  background: #21262d;
+  color: #c9d1d9;
+}
+
+.clearBtn:active {
+  background: #2d333b;
+}
+
+.runBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #238636;
+  color: #ffffff;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.runBtn:hover {
+  background: #2ea043;
+}
+
+.runBtn:active {
+  background: #238636;
+}
+
+.runIcon {
+  font-size: 11px;
+}
+
+/* ─── Running state ─────────────────────────────────────── */
+.runBtnRunning {
+  background: #1a6626;
+  cursor: not-allowed;
+  animation: pulse-green 1.4s ease-in-out infinite;
+}
+
+.runBtnRunning:hover {
+  background: #1a6626;
+}
+
+@keyframes pulse-green {
+  0%, 100% { background: #1a6626; }
+  50%       { background: #238636; }
+}
+
+/* Spinner icon — pure CSS circle */
+.spinner {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Disabled state (shared) */
+.clearBtn:disabled,
+.runBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ─── Stop button (shown while program is running) ────────── */
+.stopBtn {
+  background: #da3633 !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  animation: none !important;
+}
+
+.stopBtn:hover {
+  background: #f85149 !important;
+}
+
+.stopBtn:active {
+  background: #b91c1c !important;
+}
+
+.stopIcon {
+  font-size: 11px;
+  line-height: 1;
+}
+
+
+/* ================================================================
+   SYNTAX HIGHLIGHT TOKEN COLOURS  (global because they live in
+   dangerouslySetInnerHTML — CSS Modules can't scope them)
+   ================================================================ */
+
+/* Keywords: int, return, for, while, if, void … */
+:global(.hl-keyword)    { color: #d2a8ff; }   /* soft purple       */
+
+/* Built-in functions: printf, scanf, main … */
+:global(.hl-function)   { color: #ffa657; }   /* warm gold/amber   */
+
+/* String & char literals */
+:global(.hl-string)     { color: #7ee787; }   /* bright green      */
+
+/* Numeric literals */
+:global(.hl-number)     { color: #ff7b72; }   /* coral/red-orange  */
+
+/* Comments */
+:global(.hl-comment)    { color: #444c56; font-style: italic; }
+
+/* #include, #define … directive word */
+:global(.hl-preproc)    { color: #d2a8ff; }   /* same as keywords  */
+
+/* The value part of a preprocessor line (<stdio.h>, etc.) */
+:global(.hl-preproc-val){ color: #7ee787; }   /* green like strings */
+
+/* Operators: +, -, ==, &&, -> … */
+:global(.hl-operator)   { color: #79c0ff; }   /* sky blue / cyan   */
+
+/* Punctuation: {, }, (, ), ;, … */
+:global(.hl-punctuation){ color: #79c0ff; }   /* same as operators */
