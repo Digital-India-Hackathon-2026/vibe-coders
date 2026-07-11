@@ -1,0 +1,37 @@
+.header-meta {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.stat-chip {
+  border: var(--border);
+  border-radius: 999px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.82rem;
+  color: #e0f2fe;
+  background: rgba(14, 165, 233, 0.18);
+}
+
+.info-note {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.empty-state {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.lesson-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.inline-pill {
+  border-radius: 999px;
+  border: var(--border);
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+}
